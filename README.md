@@ -3,7 +3,7 @@
 ## License
 
 Licensed under the GNU Lesser General Public License v3.0.
-This means basically if you distribute it you have to credit this project, and also distribute the source code with the object code. This does not mean it needs to be public, just whenever the object code is distributed the source code should be distributed too. However please read the license to understand exactly what it entails.
+This means basically if you distribute it you have to credit this project, and also distribute the source code with the object code. This does not mean it needs to be public, just whenever the object code is distributed the source code should be distributed too. However please read the license to understand exactly what it entails, as my explanation is not a substitute for the license document. The license is stored in COPYING and COPYING.LESSER.
 
 ## Overview
 
