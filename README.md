@@ -19,13 +19,13 @@ Any new files should be headed with:
 >  \* Author: @GithubUsername   
 >  */
 
-Any new functions should be headed with:
+Any new functions in a class you did not create should be headed with:
 > /* Author: @GithubUsername \*/
 
-Any new or modified lines of code should be done like this:
+Any new or modified lines of code in a function you did not create should be done like this:
 > /* Author: @GithubUsername \*/ return false;
 
-Any removed code should be done like this:
+Any removed code that you did not originally write should be done like this:
 > /* Remover: @GithubUsername   
 >  \* int i = 0;   
 >  \* while(i==0) function();   
