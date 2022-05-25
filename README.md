@@ -32,7 +32,7 @@ Any removed code should be done like this:
 >  \*/
 
 Please also comment your code properly as I have done, I normally have two types of comments:
-> //This type of comment has proper grammar, and is used to explain broadly what the code does, aswell as explain limitations and usage. This is done on its own line.
+> //This type of comment has proper grammar, and is used to explain broadly what the code does, aswell as explain limitations and usage. This is done on its own line.   
 > // this type of comment after code that just quickly clarifies things
 
 I don't want to update the main branch after the final release, so before then your changes can be included in it, otherwise they will go in another branch. Just because they aren't in the main branch doesn't mean they won't be included in the next pH, or in the downloads.
