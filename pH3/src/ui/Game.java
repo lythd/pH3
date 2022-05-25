@@ -19,7 +19,7 @@ public interface Game {
 	public boolean shouldContinue(boolean p1ToMove);
 	
 	//To be used by the player before returning the move they make, so that in 'move()' it is guaranteed to receive a valid move.
-	public void isValidMove(String move);
+	public boolean isValidMove(String move);
 	
 	//Requests a move from either p1 or p2 depending on p1ToMove, and then applies that move in the game.
 	public void move(boolean p1ToMove);

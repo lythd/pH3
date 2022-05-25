@@ -37,16 +37,20 @@ public class ChessGame implements Game {
 	
 	@Override
 	public boolean shouldContinue(boolean whiteToMove) {
+		if(graphics == null) return false; // although this function doesn't require graphics, this function being called means graphics havent been set when its run, so will be stuck otherwise
+		
+		return true;
+	}
+
+	@Override
+	public boolean isValidMove(String move) {
 		return false;
 	}
 
 	@Override
-	public void isValidMove(String move) {
-		
-	}
-
-	@Override
 	public void move(boolean whiteToMove) {
+		if(graphics == null) return;
+		
 		String move = "";
 		if(whiteToMove) move = white.makeMove(this);
 		else move = black.makeMove(this);
