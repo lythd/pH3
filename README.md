@@ -15,8 +15,8 @@ If you want to make community contributions that is great, please just format yo
 
 Any new files should be headed with
 > /* CODE USAGE : If you distribute any part of this code as source code or object code, the whole project must be open source, and credit this project. For more info read 'COPYING'
->  * and 'COPYING.LESSER'. This is legally binding, and includes use as a library.
->  * Author: @GithubUsername
+>  \* and 'COPYING.LESSER'. This is legally binding, and includes use as a library.
+>  \* Author: @GithubUsername
 >  */
 
 Any new functions should be headed with
@@ -27,8 +27,8 @@ Any new or modified lines of code should be done like this
 
 Any removed code should be done like this
 > /* Remover: @GithubUsername
->  * int i = 0;
->  * while(i==0) function();
+>  \* int i = 0;
+>  \* while(i==0) function();
 >  \*/
 
 I don't want to update the main branch after the final release, so before then your changes can be included in it, otherwise they will go in another branch. Just because they aren't in the main branch doesn't mean they won't be included in the next pH, or in the downloads.
