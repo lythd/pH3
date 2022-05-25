@@ -14,7 +14,7 @@ The pH series of projects is obviously primarily a bunch of chess engines. These
 If you want to make community contributions that is great, please just format your code as I do. If not I will just have to take the time to do it myself, so it just wastes my time.
 
 Any new files should be headed with:
-> /* CODE USAGE : If you distribute any part of this code as source code or object code, the whole project must be open source, and
+> /* CODE USAGE : If you distribute any part of this code as source code or object code, the whole project must be open source, and   
 >  \* credit this project. For more info read 'COPYING' and 'COPYING.LESSER'. This is legally binding, and includes use as a library.   
 >  \* Author: @GithubUsername   
 >  */
