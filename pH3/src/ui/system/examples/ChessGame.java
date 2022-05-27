@@ -47,6 +47,15 @@ public class ChessGame implements Game {
 		 * - Next char represents lastMoveDoublePawnPush
 		 */
 		board = "rnbqkbnrpppppppp--------------------------------PPPPPPPPRNBQKBNRtffffff-";
+		//Set these joint variable things.
+		whiteToPlay = board.charAt(64) == 't' ? true : false;
+		a1MovedOrCaptured = board.charAt(65) == 't' ? true : false;
+		a8MovedOrCaptured = board.charAt(66) == 't' ? true : false;
+		h1MovedOrCaptured = board.charAt(67) == 't' ? true : false;
+		h8MovedOrCaptured = board.charAt(68) == 't' ? true : false;
+		e1Moved = board.charAt(69) == 't' ? true : false;
+		e8Moved = board.charAt(70) == 't' ? true : false;
+		lastMoveDoublePawnPush = board.charAt(71);
 	}
 	
 	//This System expects that if a string of length 72 is passed as board_ that it is a valid board, with no invalid characters or positions
@@ -66,6 +75,15 @@ public class ChessGame implements Game {
 		 */
 		board = "rnbqkbnrpppppppp--------------------------------PPPPPPPPRNBQKBNRtffffff-";
 		if(board_.length()==72)board=board_;// if invalid length then it will use default instead of the invalid board, also allows you to pass in like "" to just use the default
+		//Set these joint variable things.
+		whiteToPlay = board.charAt(64) == 't' ? true : false;
+		a1MovedOrCaptured = board.charAt(65) == 't' ? true : false;
+		a8MovedOrCaptured = board.charAt(66) == 't' ? true : false;
+		h1MovedOrCaptured = board.charAt(67) == 't' ? true : false;
+		h8MovedOrCaptured = board.charAt(68) == 't' ? true : false;
+		e1Moved = board.charAt(69) == 't' ? true : false;
+		e8Moved = board.charAt(70) == 't' ? true : false;
+		lastMoveDoublePawnPush = board.charAt(71);
 	}
 
 	@Override
@@ -136,44 +154,94 @@ public class ChessGame implements Game {
 		case 'B': // white bishop
 			//Checks if it is possible.
 			//Checks if there are any obstructions.
-			//Check if its pinned.
+			//Check if its breaking a pin.
 			break;
 		case 'b': // black bishop
 			//Checks if it is possible.
 			//Checks if there are any obstructions.
-			//Check if its pinned.
+			//Check if its breaking a pin.
 			break;
 		case 'R': // white rook
 			//Checks if it is possible.
 			//Checks if there are any obstructions.
-			//Check if its pinned.
+			//Check if its breaking a pin.
 			break;
 		case 'r': // black rook
 			//Checks if it is possible.
 			//Checks if there are any obstructions.
-			//Check if its pinned.
+			//Check if its breaking a pin.
 			break;
 		case 'Q': // white queen
 			//Checks if it is possible.
 			//Checks if there are any obstructions.
-			//Check if its pinned.
+			//Check if its breaking a pin.
 			break;
 		case 'q': // black queen
 			//Checks if it is possible.
 			//Checks if there are any obstructions.
-			//Check if its pinned.
+			//Check if its breaking a pin.
 			break;
 		case 'K': // white king
+			//If its e1 to g1 and not e1Moved and not a1MovedOrCaptured
+				//if either f1 or g1 or occupied then return false
+				//if either e1 f1 or g1 are being attacked then return false
+				//return true
+			//If its e1 to c1 and not e1Moved and not h1MovedOrCaptured
+				//if either d1 or c1 or occupied then return false
+				//if either e1 d1 or c1 are being attacked then return false
+				//return false before continuing on
+			//Checks if it is possible.
+			//Checks if there are any obstructions.
+			//Check if it is being attacked.
 			break;
 		case 'k': // black king
+			//If its e8 to g8 and not e8Moved and not a8MovedOrCaptured
+				//if either f8 or g8 or occupied then return false
+				//if either e8 f8 or g8 are being attacked then return false
+				//return true
+			//If its e8 to c8 and not e8Moved and not h8MovedOrCaptured
+				//if either d8 or c8 or occupied then return false
+				//if either e8 d8 or c8 are being attacked then return false
+				//return false before continuing on
+			//Checks if it is possible.
+			//Checks if there are any obstructions.
+			//Check if it is being attacked.
 			break;
 		case 'P': // white pawn
+			//If 2 to 4
+				//Check any obstructions.
+				//Check if its pinned.
+				//Return at the end
+			//If diagonal thing.
+				//check if something to capture or something to en passant
+				//Check if its breaking a pin.
+				//Return at the end.
+			//Checks if it is possible.
+			//Checks if there are any obstructions.
+			//Check if its breaking a pin.
 			break;
 		case 'p': // black pawn
+			//If 7 to 5
+				//Check any obstructions.
+				//Check if its pinned.
+				//Return at the end
+			//If diagonal thing.
+				//check if something to capture or something to en passant
+				//Check if its breaking a pin.
+				//Return at the end.
+			//Checks if it is possible.
+			//Checks if there are any obstructions.
+			//Check if its breaking a pin.
 			break;
 		case 'N': // white knight
+			//Checks if it is possible.
+			//Checks if there are any obstructions.
+			//Check if its breaking a pin.
 			break;
 		case 'n': // black knight
+			//Checks if it is possible.
+			//Checks if there are any obstructions.
+			//Check if its breaking a pin.
 			break;
 		default:
 			return false;
@@ -252,6 +320,7 @@ public class ChessGame implements Game {
 	}
 	
 	private void setBoardChar(byte i, char c) {
+		if(i<0 || i>=72) return;
 		board = board.substring(0,i) + c + board.substring(i+1);
 	}
 
