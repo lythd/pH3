@@ -267,9 +267,9 @@ public class ChessGame implements Game {
 	}
 
 	//Takes in any general functional move, or any general display move, and converts it into a specific display move.
-	//   Example: "f1>g3" -> "Ng3"
+	//   Example: "f1-g3" -> "Ng3"
 	/* General Functional Move
-	 *   start and end square in one of the following formats "f1>g3", "f1.g3", ".f1g3", "f1g3"
+	 *   start and end square in one of the following formats "f1>g3", "f1.g3", ".f1g3", "f1-g3", "f1g3"
 	 * General Display Move
 	 *   this is the normal way of writing a move, "abcdefgh"
 	 * 		a: piece (omitted for pawn), NBRQK
@@ -299,9 +299,9 @@ public class ChessGame implements Game {
 	
 	
 	//Takes in any general functional move, or any general display move, and converts it into a specific functional move.
-	//   Example: "Ng3" -> "f1>g3"
+	//   Example: "Ng3" -> "f1-g3"
 	/* General Functional Move
-	 *   start and end square in one of the following formats "f1>g3", "f1.g3", ".f1g3", "f1g3"
+	 *   start and end square in one of the following formats "f1>g3", "f1.g3", ".f1g3", "f1-g3", "f1g3"
 	 * General Display Move
 	 *   this is the normal way of writing a move, "abcdefgh"
 	 * 		a: piece (omitted for pawn), NBRQK
@@ -313,7 +313,7 @@ public class ChessGame implements Game {
 	 * 		g: # if checkmate, + if check, (sometimes ++ is used for double check), can always be omitted and doesn't care if the wrong one is used
 	 * 		h: !! if brilliant move, ! if great move, ?! if inaccuracy , ? if mistake, ?? if blunder, can always be omitted and doesn't care if the wrong one is used
 	 * Specific Functional Move
-	 *   start and end square in this specific format "f1>g3"
+	 *   start and end square in this specific format "f1-g3"
 	 */
 	public String getFunctionalMove(String move) {
 		return "";
