@@ -18,7 +18,10 @@ public class HumanPlayer implements Player {
 
 	@Override
 	public String makeMove(Game game) {
-		return "";
+		while(true) {
+			String move = game.input(game.isP1Turn());
+			if(game.isValidMove(move)) return move;
+		}
 	}
 
 	@Override
