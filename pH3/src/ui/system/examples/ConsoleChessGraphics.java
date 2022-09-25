@@ -29,7 +29,7 @@ public class ConsoleChessGraphics implements Graphics {
 	@Override
 	public void updateState(String board) {
 		for(int i = 0; i < 8;) System.out.println(board.substring(i*8,(++i)*8)); //since id use i+1 there anyway, might aswell use ++i which increments and then returns i
-		System.out.println("\n\n\n\n");
+		System.out.println("");
 	}
 
 	@Override
