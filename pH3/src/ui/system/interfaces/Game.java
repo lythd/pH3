@@ -76,6 +76,10 @@ public interface Game {
 
 	//Sets the graphics manager of the game, this does allow it to be switched mid game seamlessly.
 	public void setGraphics(Graphics graphics);
+
+	//Although access to the whole graphics is not permitted beyond the Game class, the Player classes will need access to the input. So it is provided through this proxy.
+	//It also allows the Game class to provide any modification needed specific to the game.
+	public String input(boolean isP1);
 	
 	//Checks compatibility
 	public boolean isCompatible(String system);
