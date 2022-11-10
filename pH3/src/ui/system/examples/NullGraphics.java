@@ -9,47 +9,23 @@ package ui.system.examples;
 //The system package just refers to all the classes based on the system protocol, general information about the system protocol is in 'Game'.
 //The examples package just refers to all of the classes that implement the system protocol, rather than being the interfaces for it.
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
 import ui.system.interfaces.Graphics;
 
-//This class is just a simple console chess ui, it has the advantage of being simple and not using up another thread. 
-public class ConsoleChessGraphics implements Graphics {
+//This class is just so you can put in a graphics class, but without doing anything.
+public class NullGraphics implements Graphics {
 
-	private static final String SYSTEM = "ch000";
+	private static final String SYSTEM = "";
 	
-	private BufferedReader reader;
-	
-	public ConsoleChessGraphics() {
-		reader = new BufferedReader(new InputStreamReader(System.in));
-	}
+	public NullGraphics() {}
 	
 	@Override
-	public void updateState(String board) {
-		System.out.println("");
-		for(int i = 0; i < 8;) System.out.println(board.substring(i*8,(++i)*8)); //since id use i+1 there anyway, might aswell use ++i which increments and then returns i
-		System.out.println("");
-	}
+	public void updateState(String board) {}
 
 	@Override
-	public void gameOver(float state) {
-		if(state == 1) System.out.println("White wins!");
-		else if(state == 0) System.out.println("Black wins!");
-		else System.out.println("Tie!");
-	}
+	public void gameOver(float state) {}
 
 	@Override
-	public String input(boolean isWhite) {
-		if(isWhite) System.out.println("White make your move,\n> ");
-		else System.out.println("Black make your move,\n> ");
-		try {
-			return reader.readLine();
-		} catch (IOException e) {
-			return "";
-		}
-	}
+	public String input(boolean isWhite) {return "";}
 
 	@Override
 	public boolean isCompatible(String system) {

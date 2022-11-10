@@ -32,6 +32,21 @@ public class ChessGame implements Game {
 	private boolean e8Moved; // has the king on e8 been moved, this is important for castling
 	private char lastMoveDoublePawnPush; // ie if black pushed its a pawn two square it would be 'a', if no double pawn push last turn then its '-', used for en passant
 	
+	private ChessGame(ChessGame g) {
+		white=new NullPlayer();
+		black=new NullPlayer();
+		graphics=new NullGraphics();
+		board=g.board;
+		whiteToPlay=g.whiteToPlay;
+		a1MovedOrCaptured=g.a1MovedOrCaptured;
+		a8MovedOrCaptured=g.a8MovedOrCaptured;
+		h1MovedOrCaptured=g.h1MovedOrCaptured;
+		h8MovedOrCaptured=g.h8MovedOrCaptured;
+		e1Moved=g.e1Moved;
+		e8Moved=g.e8Moved;
+		lastMoveDoublePawnPush=g.lastMoveDoublePawnPush;
+	}
+	
 	public ChessGame() {
 		white = new HumanPlayer();
 //		black = new PH3Player();
@@ -127,10 +142,10 @@ public class ChessGame implements Game {
 		byte endfile = (byte) (((byte) move.charAt(3))-((byte) 'a'));
 		byte endrank = (byte) (7-(((byte) move.charAt(4))-((byte) '1')));
 		//Puts the rest in another function to avoid redundancy for if that information is already available.
-		return isValidMove(startfile,startrank,endfile,endrank);
+		return isValidMove(board,startfile,startrank,endfile,endrank,move);
 	}
 	
-	private boolean isValidMove(byte startfile, byte startrank, byte endfile, byte endrank) {
+	private boolean isValidMove(String board, byte startfile, byte startrank, byte endfile, byte endrank, String move) {
 		//remember all these inputs are guaranteed to be valid since within the class
 		byte i1 = (byte) (startfile + 8 * startrank); // i hate how operations always return an integer, i want to use single byte numbers dammit
 		byte i2 = (byte) (endfile + 8 * endrank); // also to clarify since i messed it up myself first, when i say file and rank i mean which file and rank, not where on the file and rank. so the first 8 positions in the board are changing file while keeping rank, thus the file is the smaller index.
@@ -164,27 +179,34 @@ public class ChessGame implements Game {
 			if(Math.abs(endfile-startfile)-Math.abs(endrank-startrank)!=0)return false;
 			//Checks if there are any obstructions.
 			if(Character.isUpperCase(board.charAt(8*endrank+endfile))) return false;
-			
-			//Check if its breaking a pin.
-			
+			for(int i=1;i<Math.abs(endrank-startrank);i+=1) {
+				if(board.charAt((startfile+(endfile>startfile?i:-i))+8*(startrank+(endrank>startrank?i:-i)))!='-')return false;
+			}
 			break;
 		case 'b': // black bishop
 			//Checks if it is possible.
 			if(Math.abs(endfile-startfile)-Math.abs(endrank-startrank)!=0)return false;
 			//Checks if there are any obstructions.
 			if(Character.isLowerCase(board.charAt(8*endrank+endfile))) return false;
-			
-			//Check if its breaking a pin.
-			
+			for(int i=1;i<Math.abs(endrank-startrank);i+=1) {
+				if(board.charAt((startfile+(endfile>startfile?i:-i))+8*(startrank+(endrank>startrank?i:-i)))!='-')return false;
+			}
 			break;
 		case 'R': // white rook
 			//Checks if it is possible.
 			if(endfile!=startfile&&endrank!=startrank)return false;
 			//Checks if there are any obstructions.
 			if(Character.isUpperCase(board.charAt(8*endrank+endfile))) return false;
-			
-			//Check if its breaking a pin.
-			
+			if(endfile==startfile) {
+				for(int i=1;i<Math.abs(endrank-startrank);i+=1) {
+					if(board.charAt(startfile+8*(startrank+(endrank>startrank?i:-i)))!='-')return false;
+				}
+			}
+			else {
+				for(int i=1;i<Math.abs(endfile-startfile);i+=1) {
+					if(board.charAt((startfile+(endfile>startfile?i:-i))+8*startrank)!='-')return false;
+				}
+			}
 			break;
 		case 'r': // black rook
 			//Checks if it is possible.
@@ -192,160 +214,190 @@ public class ChessGame implements Game {
 			//Checks if there are any obstructions.
 			if(Character.isLowerCase(board.charAt(8*endrank+endfile))) return false;
 			
-			//Check if its breaking a pin.
-			
 			break;
 		case 'Q': // white queen
 			//Checks if it is possible.
 			if(endfile!=startfile&&endrank!=startrank&&Math.abs(endfile-startfile)-Math.abs(endrank-startrank)!=0)return false;
 			//Checks if there are any obstructions.
 			if(Character.isUpperCase(board.charAt(8*endrank+endfile))) return false;
-			
-			//Check if its breaking a pin.
-			
+			if(endfile==startfile) {
+				for(int i=1;i<Math.abs(endrank-startrank);i+=1) {
+					if(board.charAt(startfile+8*(startrank+(endrank>startrank?i:-i)))!='-')return false;
+				}
+			}
+			else if(endrank==startrank) {
+				for(int i=1;i<Math.abs(endfile-startfile);i+=1) {
+					if(board.charAt((startfile+(endfile>startfile?i:-i))+8*startrank)!='-')return false;
+				}
+			} else {
+				for(int i=1;i<Math.abs(endrank-startrank);i+=1) {
+					if(board.charAt((startfile+(endfile>startfile?i:-i))+8*(startrank+(endrank>startrank?i:-i)))!='-')return false;
+				}
+			}
 			break;
 		case 'q': // black queen
 			//Checks if it is possible.
 			if(endfile!=startfile&&endrank!=startrank&&Math.abs(endfile-startfile)-Math.abs(endrank-startrank)!=0)return false;
 			//Checks if there are any obstructions.
 			if(Character.isLowerCase(board.charAt(8*endrank+endfile))) return false;
-			
-			//Check if its breaking a pin.
-			
+			if(endfile==startfile) {
+				for(int i=1;i<Math.abs(endrank-startrank);i+=1) {
+					if(board.charAt(startfile+8*(startrank+(endrank>startrank?i:-i)))!='-')return false;
+				}
+			}
+			else if(endrank==startrank) {
+				for(int i=1;i<Math.abs(endfile-startfile);i+=1) {
+					if(board.charAt((startfile+(endfile>startfile?i:-i))+8*startrank)!='-')return false;
+				}
+			} else {
+				for(int i=1;i<Math.abs(endrank-startrank);i+=1) {
+					if(board.charAt((startfile+(endfile>startfile?i:-i))+8*(startrank+(endrank>startrank?i:-i)))!='-')return false;
+				}
+			}
 			break;
 		case 'K': // white king
-			//If its e1 to g1 and not e1Moved and not a1MovedOrCaptured
-			
-				//if either f1 or g1 or occupied then return false
-			
-				//if either e1 f1 or g1 are being attacked then return false
-			
-				//return true
-			
-			//If its e1 to c1 and not e1Moved and not h1MovedOrCaptured
-			
-				//if either d1 or c1 or occupied then return false
-			
-				//if either e1 d1 or c1 are being attacked then return false
-			
-				//return false before continuing on
-			
+			//If its e1 to g1 and not e1Moved and not h1MovedOrCaptured
+			System.out.println("a");
+			if(startfile==4&&startrank==7&&endfile==6&&endrank==7&&!e1Moved&&!h1MovedOrCaptured) {
+				System.out.println("b");
+				//if either f1 or g1 are occupied then return false
+				if(board.charAt(5+8*7)!='-'||board.charAt(6+8*7)!='-')return false;
+				System.out.println("c");
+				//if either e1 f1 or g1 are being attacked then return false (g1 is checked at the end)
+				if(!checkKing(board,"")) return false; //checks e1
+				System.out.println("d");
+				if(!checkKing(board,"e1.f1")) return false; //checks f1
+				System.out.println("e");
+				//break
+				break;
+			}
+			//If its e1 to c1 and not e1Moved and not a1MovedOrCaptured
+			if(startfile==4&&startrank==7&&endfile==2&&endrank==7&&!e1Moved&&!a1MovedOrCaptured) {
+				//if either d1, c1 or b1 are occupied then return false
+				if(board.charAt(3+8*7)!='-'||board.charAt(2+8*7)!='-'||board.charAt(1+8*7)!='-')return false;
+				//if either e1 d1 or c1 are being attacked then return false (c1 is checked at the end)
+				if(!checkKing(board,"")) return false; //checks e1
+				if(!checkKing(board,"e1.d1")) return false; //checks d1
+				//break
+				break;
+			}
 			//Checks if it is possible.
-			
+			if(endfile==startfile&&endrank==startrank||Math.abs(endrank-startrank)>1||Math.abs(endfile-startfile)>1) return false;
 			//Checks if there are any obstructions.
-			
-			//Check if it is being attacked.
-			
+			if(Character.isUpperCase(board.charAt(8*endrank+endfile))) return false;
 			break;
 		case 'k': // black king
-			//If its e8 to g8 and not e8Moved and not a8MovedOrCaptured
-			
-				//if either f8 or g8 or occupied then return false
-			
-				//if either e8 f8 or g8 are being attacked then return false
-			
-				//return true
-			
-			//If its e8 to c8 and not e8Moved and not h8MovedOrCaptured
-			
-				//if either d8 or c8 or occupied then return false
-			
-				//if either e8 d8 or c8 are being attacked then return false
-			
-				//return false before continuing on
-			
+			//If its e8 to g8 and not e8Moved and not h8MovedOrCaptured
+			if(startfile==4&&startrank==0&&endfile==6&&endrank==0&&!e8Moved&&!h8MovedOrCaptured) {
+				//if either f8 or g8 are occupied then return false
+				if(board.charAt(5+8*0)!='-'||board.charAt(6+8*0)!='-')return false;
+				//if either e8 f8 or g8 are being attacked then return false (g8 is checked at the end)
+				if(!checkKing(board,"")) return false; //checks e8
+				if(!checkKing(board,"e8.f8")) return false; //checks f8
+				//break
+				break;
+			}
+			//If its e8 to c8 and not e8Moved and not a8MovedOrCaptured
+			if(startfile==4&&startrank==0&&endfile==2&&endrank==0&&!e8Moved&&!a8MovedOrCaptured) {
+				//if either d8, c8 or b8 are occupied then return false
+				if(board.charAt(3+8*0)!='-'||board.charAt(2+8*0)!='-'||board.charAt(1+8*0)!='-')return false;
+				//if either e8 d8 or c8 are being attacked then return false (c8 is checked at the end)
+				if(!checkKing(board,"")) return false; //checks e8
+				if(!checkKing(board,"e8.d8")) return false; //checks d8
+				//break
+				break;
+			}
 			//Checks if it is possible.
-			
+			if(endfile==startfile&&endrank==startrank||Math.abs(endrank-startrank)>1||Math.abs(endfile-startfile)>1) return false;
 			//Checks if there are any obstructions.
-			
-			//Check if it is being attacked.
-			
+			if(Character.isLowerCase(board.charAt(8*endrank+endfile))) return false;
 			break;
 		case 'P': // white pawn
 			//If 2 to 4
 			if(startrank==6&&endrank==4) {
 				//Check any obstructions.
 				if(board.charAt(8*endrank+endfile)!='-'||board.charAt(8*endrank+8+endfile)!='-')return false;
-				//Check if its pinned.
-				
-				//Return at the end
-				return true;
+				//Break at the end.
+				break;
 			}
 			//If diagonal thing.
 			if(endrank==startrank-1&&Math.abs(endfile-startfile)==1) {
-				//check if something to capture or something to en passant
+				//Check if something to capture or something to en passant
 				if(((lastMoveDoublePawnPush-'a')!=endrank||endfile!=2)&&!Character.isLowerCase(board.charAt(8*endrank+endfile)))return false;
-				//Check if its breaking a pin.
-				
-				//Return at the end.
-				return true;
+				//Break at the end.
+				break;
 			}
 			//Checks if it is possible.
 			if(endfile!=startfile||endrank!=startrank-1)return false;
 			//Checks if there are any obstructions.
 			if(board.charAt(8*endrank+endfile)!='-')return false;
-			//Check if its breaking a pin.
-			
 			break;
 		case 'p': // black pawn
 			//If 7 to 5
 			if(startrank==1&&endrank==3) {
 				//Check any obstructions.
 				if(board.charAt(8*endrank+endfile)!='-'||board.charAt(8*endrank-8+endfile)!='-')return false;
-				//Check if its pinned.
-				
-				//Return at the end
-				return true;
+				//Break at the end.
+				break;
 			}
 			//If diagonal thing.
 			if(endrank==startrank+1&&Math.abs(endfile-startfile)==1) {
-				//check if something to capture or something to en passant
+				//Check if something to capture or something to en passant
 				if(((lastMoveDoublePawnPush-'a')!=endrank||endfile!=6)&&!Character.isUpperCase(board.charAt(8*endrank+endfile)))return false;
-				//Check if its breaking a pin.
-				
-				//Return at the end.
-				return true;
+				//Break at the end.
+				break;
 			}
 			//Checks if it is possible.
 			if(endfile!=startfile||endrank!=startrank+1)return false;
 			//Checks if there are any obstructions.
 			if(board.charAt(8*endrank+endfile)!='-')return false;
-			//Check if its breaking a pin.
-			
 			break;
 		case 'N': // white knight
 			//Checks if it is possible.
 			if((Math.abs(endfile-startfile)!=2||Math.abs(endrank-startrank)!=1)&&(Math.abs(endfile-startfile)!=1||Math.abs(endrank-startrank)!=2))return false;
 			//Checks if there are any obstructions.
 			if(Character.isUpperCase(board.charAt(8*endrank+endfile))) return false;
-			//Check if its breaking a pin.
-			
 			break;
 		case 'n': // black knight
 			//Checks if it is possible.
 			if((Math.abs(endfile-startfile)!=2||Math.abs(endrank-startrank)!=1)&&(Math.abs(endfile-startfile)!=1||Math.abs(endrank-startrank)!=2))return false;
 			//Checks if there are any obstructions.
 			if(Character.isLowerCase(board.charAt(8*endrank+endfile))) return false;
-			//Check if its breaking a pin.
-			
 			break;
 		default:
 			return false;
 		}
+		//check if king is being attacked, if it is then return false
+		if(!move.equals("")&&!checkKing(board,move))return false;
 		return true;
 	}
 
+	private boolean checkKing(String board, String move) {
+		ChessGame tmpg = new ChessGame(this);
+		if(!move.equals(""))tmpg.move(move);
+		tmpg.whiteToPlay=!whiteToPlay;
+		int tmpin = board.indexOf(whiteToPlay ? "K" : "k");
+		for(int f=0;f<8;f++)for(int r=0;r<8;r++) {
+			char tmpc = board.charAt(f+r*8);
+			if((whiteToPlay && tmpc >= 'a' && tmpc <= 'z' || !whiteToPlay && tmpc >= 'A' && tmpc <= 'Z')&&tmpg.isValidMove(tmpg.board, (byte)f, (byte)r, (byte)(tmpin%8), (byte)(tmpin/8), "")) {tmpg=null;return false;}
+		}
+		tmpg=null;
+		return true;
+	}
+	
 	@Override
 	public void move(boolean whiteToMove) {
-		whiteToPlay = whiteToMove;
-		setBoardChar((byte) 64, whiteToPlay ? 't' : 'f');
+		this.whiteToPlay = whiteToMove;
 		
 		if(graphics == null) return;
 		
 		String move = "";
 		if(whiteToMove) move = white.makeMove(this);
 		else move = black.makeMove(this);
-		
+		move(move);
+	}
+	
+	private void move(String move) {
 		//Process move, remember its guaranteed to be valid by the interface so no need for checking.
 		String pos1 = move.substring(0,2);
 		String pos2 = move.substring(3,5);
@@ -361,6 +413,10 @@ public class ChessGame implements Game {
 		} else if(getPiece(pos1)=='P') {
 			if(pos1.charAt(0)==pos2.charAt(0)&&pos1.charAt(1)=='2'&&pos2.charAt(1)=='4') lastMoveDoublePawnPush=pos1.charAt(0);
 		}
+		if(pos1.equals("e1")&&pos2.equals("g1")&&getPiece(pos1)=='K') {setPiece("f1",'R');setPiece("h1",'-');}
+		if(pos1.equals("e1")&&pos2.equals("c1")&&getPiece(pos1)=='K') {setPiece("d1",'R');setPiece("a1",'-');}
+		if(pos1.equals("e8")&&pos2.equals("g8")&&getPiece(pos1)=='k') {setPiece("f8",'r');setPiece("h8",'-');}
+		if(pos1.equals("e8")&&pos2.equals("c8")&&getPiece(pos1)=='k') {setPiece("d8",'r');setPiece("a8",'-');}
 		setPiece(pos2,getPiece(pos1));
 		setPiece(pos1,'-');
 		if(getPiece("a1")!='R')a1MovedOrCaptured=true;
@@ -376,6 +432,16 @@ public class ChessGame implements Game {
 	
 	//expects valid place, the only lenience is that the letter in place can be uppercase
 	public char getPiece(String place) {
+		return getPiece(board,place);
+	}
+
+	//expects valid place and piece, the only lenience is that the letter in place can be uppercase
+	public void setPiece(String place, char piece) {
+		board = setPiece(board,place,piece);
+	}
+	
+	//expects valid place, the only lenience is that the letter in place can be uppercase
+	private char getPiece(String board, String place) {
 		place = place.toLowerCase();
 		int i = 7-(place.charAt(1)-'1');
 		int j = place.charAt(0)-'a';
@@ -383,11 +449,11 @@ public class ChessGame implements Game {
 	}
 
 	//expects valid place and piece, the only lenience is that the letter in place can be uppercase
-	public void setPiece(String place, char piece) {
+	private String setPiece(String board, String place, char piece) {
 		place = place.toLowerCase();
 		int i = 7-(place.charAt(1)-'1');
 		int j = place.charAt(0)-'a';
-		board = board.substring(0,8*i+j)+piece+board.substring(8*i+j+1);
+		return board.substring(0,8*i+j)+piece+board.substring(8*i+j+1);
 	}
 	
 	//Takes in any general functional move, or any general display move, and converts it into a specific display move.
@@ -441,11 +507,6 @@ public class ChessGame implements Game {
 	 */
 	public String getFunctionalMove(String move) {
 		return "";
-	}
-	
-	private void setBoardChar(byte i, char c) {
-		if(i<0 || i>=72) return;
-		board = board.substring(0,i) + c + board.substring(i+1);
 	}
 
 	@Override
